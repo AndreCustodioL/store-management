@@ -1,0 +1,30 @@
+<h1>Produtos</h1>
+<p>Veja seus produtos cadastrados.</p>
+<hr>
+
+<a href="{{URL}}/admin/products/new">
+    <button type="button" class="btn btn-success">Cadastrar produto</button>
+</a>
+
+<hr>
+
+{{status}}
+
+<table class="table table-light table-striped">
+    <thead>
+        <tr>
+            <th>ID LOJA</th>
+            <th>ID</th>
+            <th style="width: 200px;">NOME</th>
+            <th>DESCRICAO</th>
+            <th>ID CATEGORIA</th>
+            <th>PREÇO DE VENDA</th>
+            <th style="width: 200px;">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{itens}}
+    </tbody>
+</table>
+
+{{pagination}}

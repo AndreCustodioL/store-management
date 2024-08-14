@@ -11,3 +11,7 @@ include __DIR__.'/admin/testimonies.php';
 
 //INCLUI AS ROTAS DE USUÁRIOS
 include __DIR__.'/admin/users.php';
+
+//INCLUI AS ROTAS DE PRODUTOS
+include __DIR__.'/admin/products.php';
+

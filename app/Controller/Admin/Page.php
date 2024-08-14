@@ -23,6 +23,10 @@ class Page{
         'users' => [
             'label' => 'Usuários',
             'link' => URL.'/admin/users'
+        ],
+        'products' => [
+            'label' => 'Produtos',
+            'link' => URL.'/admin/products'
         ]
     ];
     
