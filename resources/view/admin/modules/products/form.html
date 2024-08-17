@@ -11,49 +11,62 @@
 {{status}}
 
 <form method="POST">
-
-    <div class="form-group">
-        <label>Id Loja</label>
-        <input type="text" name="id_loja" class="form-control" value="{{id_loja}}" required>
+    
+    <div class="card shadow">
+        <div class="card-body row">
+            <h5 class="card-title">Parâmetros Gerais</h5>
+            <div class="col-4">
+                <input type="file">
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" name="nome" class="form-control" value="{{nome}}" required>
+                </div>
+                <div class="form-group my-3">
+                    <label>Descrição</label>
+                    <textarea name="descricao" class="form-control" rows="4" required>{{descricao}}</textarea>
+                </div>
+            </div>
+            <div class="col-12 row">
+                
+                <div class="form-group col-4">
+                    <label>Categoria</label>
+                    <!-- <input type="text" name="id_categoria" class="form-control" value="{{id_categoria}}" required> -->
+                    <select class="form-select" aria-label="Categorias do produto" name="id_categoria" id="categoria">
+                        <option selected>Selecione...</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      </select>
+                </div>
+                
+                <div class="form-group col-4">
+                    <label>Unidade de venda</label>
+                    <input type="text" name="un_venda" class="form-control" value="{{un_venda}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Preço de custo</label>
+                    <input type="text" name="preco_custo" class="form-control" value="{{preco_custo}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Preço de venda</label>
+                    <input type="text" name="preco_venda" class="form-control" value="{{preco_venda}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Estoque</label>
+                    <input type="text" name="qtd_estoque" class="form-control" value="{{qtd_estoque}}" required>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label>Nome</label>
-        <input type="text" name="nome" class="form-control" value="{{nome}}" required>
-    </div>
-
-    <div class="form-group my-3">
-        <label>Descricao</label>
-        <textarea name="descricao" class="form-control" rows="5" required>{{descricao}}</textarea>
-    </div>
-
-    <div class="form-group">
-        <label>Id Categoria</label>
-        <input type="text" name="id_categoria" class="form-control" value="{{id_categoria}}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Unidade de venda</label>
-        <input type="text" name="un_venda" class="form-control" value="{{un_venda}}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Preço de custo</label>
-        <input type="text" name="preco_custo" class="form-control" value="{{preco_custo}}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Preço de venda</label>
-        <input type="text" name="preco_venda" class="form-control" value="{{preco_venda}}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Estoque</label>
-        <input type="text" name="qtd_estoque" class="form-control" value="{{qtd_estoque}}" required>
-    </div>
-
+    
+    
     <div class="form-group">
         <button type="submit" class="btn btn-success">Enviar</button>
     </div>
-
+    
 </form>

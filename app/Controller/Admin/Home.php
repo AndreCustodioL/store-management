@@ -14,7 +14,9 @@ class Home extends Page {
      */
     public static function getHome($request){
         //CONTEÚDO DA HOME
-        $content = View::render('admin/modules/home/index',[]);
+        $content = View::render('admin/modules/home/index',[
+            'user' => $request->user->nome ?? 'Usuário'
+        ]);
 
         //RETORNA A PÁGINA COMPLETA
         return parent::getPanel('Admin Home',$content,'home');
