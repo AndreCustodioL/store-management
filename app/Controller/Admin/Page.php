@@ -14,18 +14,22 @@ class Page{
     private static $modules = [
         'home' => [
             'label' => 'Home',
+            'icon' => 'bi-house',
             'link' => URL.'/admin'
         ],
         'testimonies' => [
             'label' => 'Depoimentos',
+            'icon' => 'bi-chat-right-quote',
             'link' => URL.'/admin/testimonies'
         ],
         'users' => [
             'label' => 'Usuários',
+            'icon' => 'bi-person',
             'link' => URL.'/admin/users'
         ],
         'products' => [
             'label' => 'Produtos',
+            'icon' => 'bi-box-seam',
             'link' => URL.'/admin/products'
         ]
     ];
@@ -59,8 +63,9 @@ class Page{
         foreach(self::$modules as $hash=>$module){
             $links .= View::render('admin/menu/link',[
                 'label' => $module['label'],
+                'icon' => $module['icon'],
                 'link' => $module['link'],
-                'current' => $hash == $currentModule ? 'text-danger' : ''
+                'current' => $hash == $currentModule ? 'current' : ''
             ]);
         }
 

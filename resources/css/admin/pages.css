@@ -1,0 +1,81 @@
+/* Navegação Lateral */
+
+ .sidebar {
+    height: 100vh;
+    width: 250px;
+    transition: width 0.3s;
+    overflow: hidden;
+    background-color: #343a40;
+    position: relative;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.nav-link {
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+.nav-link i {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.link-text {
+    display: inline;
+    transition: opacity 0.3s, width 0.3s;
+    white-space: nowrap;
+}
+
+.sidebar.collapsed .link-text {
+    opacity: 0;
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-header h4 {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header button {
+    margin-left: auto;
+}
+
+.submenu {
+    padding-left: 20px;
+}
+
+.submenu a {
+    padding-left: 30px;
+    font-size: 16px;
+}
+
+.submenu .nav-link {
+    display: block;
+}
+
+.current {
+    color: #E63ED2;
+}
