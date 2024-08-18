@@ -45,6 +45,16 @@ class Category {
     }
     
     /**
+     * Método responsável por retornar as categorias cadastradas em uma loja
+     *
+     * @param  int $id_loja
+     * @return PDOStatement
+     */
+    public static function getCategoriesByShop($id_loja) {
+        return self::getCategories('id_loja = '.$id_loja);
+    }
+    
+    /**
      * Método responsável por retornar categorias
      *
      * @param  string $where
