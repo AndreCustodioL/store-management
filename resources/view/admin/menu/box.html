@@ -1,14 +1,20 @@
 <div id="sidebar" class="bg-dark text-white p-3 sidebar">
-      
-      <div class="sidebar-header">
-        <h4 class="link-text">Menu</h4>
-        <button id="sidebarToggle" class="btn btn-outline-light">
-          <i class="bi bi-list"></i>
-        </button>
-      </div>
-
-      <ul class="nav flex-column">
-        {{links}}
-      </ul>
-      
+  
+  <div class="sidebar-header">
+    <h4 class="link-text">Menu</h4>
+    <button id="sidebarToggle" class="btn btn-outline-light">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+  
+  <ul class="nav flex-column">
+    {{links}}
+    <li class="nav-item">
+        <a class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#logoutModal">
+          <i class="bi bi-box-arrow-right"></i>
+          <span class="link-text">Sair</span>
+        </a>
+    </li>
+  </ul>
+  
 </div>

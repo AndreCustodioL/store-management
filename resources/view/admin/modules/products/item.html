@@ -1,16 +1,17 @@
-<tr>
+<tr class="container">
     <td>{{id_loja}}</td>
     <td>{{id}}</td>
-    <td>{{nome}}</td>
+    <td class="text-truncate text-nowrap" style="max-width: 250px;">{{nome}}</td>
     <td>{{descricao}}</td>
     <td>{{id_categoria}}</td>
     <td>R$ {{preco_venda}}</td>
     <td>
-        <a href="{{URL}}/admin/products/{{uuid}}/edit">
-            <button type="button" class="btn btn-primary">Editar</button>
-        </a>
-        <a href="{{URL}}/admin/products/{{uuid}}/delete">
-            <button type="button" class="btn btn-danger">Excluir</button>
-        </a>
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="{{URL}}/admin/products/{{uuid}}/edit">Editar</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-bs-product-name="{{nome}}" data-bs-product-uuid="{{uuid}}">Excluir</a></li>
+            </ul>
+        </div>
     </td>
 </tr>

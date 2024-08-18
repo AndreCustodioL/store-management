@@ -52,3 +52,13 @@ $obRouter->post('/admin/products/{uuid}/edit',[
         return new Response(200,Admin\Product::setEditProduct($request,$uuid));
     }
 ]);
+
+//ROTA DE EXCLUSÃO DE UM PRODUTO
+$obRouter->get('/admin/products/{uuid}/delete',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request,$uuid){
+        return new Response(200,Admin\Product::setDeleteProduct($request,$uuid));
+    }
+]);

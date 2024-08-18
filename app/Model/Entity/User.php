@@ -14,6 +14,13 @@ class User{
     public $id;
     
     /**
+     * ID da loja do usuário
+     *
+     * @var int
+     */
+    public $id_loja;
+    
+    /**
      * Nome do usuário
      *
      * @var string
@@ -42,6 +49,7 @@ class User{
     public function cadastrar(){
         //INSERE A INSTANCIA NO BANCO
         $this->id = (new Database('usuarios'))->insert([
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
             'email' => $this->email,
             'senha' => $this->senha
@@ -58,6 +66,7 @@ class User{
      */
     public function atualizar(){
         return (new Database('usuarios'))->update('id = '.$this->id,[
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
             'email' => $this->email,
             'senha' => $this->senha

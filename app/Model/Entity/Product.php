@@ -155,7 +155,7 @@ class Product {
      */
     public function excluir(){
         //EXCLUI O PRODUTO NO BANCO DE DADOS
-        return (new Database('produto'))->delete('id_loja = '.$this->id_loja.' AND '.'id = '.$this->id);
+        return (new Database('produtos'))->delete('id_loja = '.$this->id_loja.' AND '.'id = '.$this->id);
 
     }
     

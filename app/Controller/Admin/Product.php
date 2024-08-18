@@ -20,7 +20,7 @@ class Product extends Page {
         $itens = '';
 
         //QUANTIDADE TOTAL DE REGISTRO
-        $quantidadeTotal = EntityProduct::getProducts(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
+        $quantidadeTotal = EntityProduct::getProducts('id_loja = '.$request->user->id_loja,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
 
         //PÁGINA ATUAL
         $queryParams = $request->getQueryParams();
@@ -33,7 +33,7 @@ class Product extends Page {
         $obPagination = new Pagination($quantidadeTotal,$paginaAtual,$qtdPagina);
 
         //RESULTADOS DA PÁGINA
-        $results = EntityProduct::getProducts(null,'id DESC',$obPagination->getLimit());
+        $results = EntityProduct::getProducts('id_loja = '.$request->user->id_loja,'id DESC',$obPagination->getLimit());
 
         //RENDERIZA O ITEM
         while($obProduct = $results->fetchObject(EntityProduct::class)){
@@ -83,7 +83,6 @@ class Product extends Page {
         //CONTEÚDO DO FORMULARIO
         $content = View::render('admin/modules/products/form',[
             'title' => 'Cadastrar Produto',
-            'id_loja' => '',
             'nome' => '',
             'descricao' => '',
             'id_categoria' => '',
@@ -95,7 +94,7 @@ class Product extends Page {
         ]);
 
         //RETORNA A PÁGINA COMPLETA
-        return parent::getPanel('Admin Cadastrar Produto',$content,'products');
+        return parent::getPanel('Cadastrar Produto',$content,'products');
     }
     
     /**
@@ -109,7 +108,7 @@ class Product extends Page {
         
         //NOVA INSTANCIA DE DEPOIMENTO
         $obProduct = new EntityProduct;
-        $obProduct->id_loja = $postVars['id_loja'] ?? '1';
+        $obProduct->id_loja = $request->user->id_loja;
         $obProduct->uuid = Uuid::uuid4()->toString();
         $obProduct->nome = $postVars['nome'] ?? '';
         $obProduct->descricao = $postVars['descricao'] ?? '';
@@ -174,7 +173,6 @@ class Product extends Page {
         //CONTEÚDO DO FORMULARIO
         $content = View::render('admin/modules/products/form',[
             'title' => 'Editar Produto',
-            'id_loja' => $obProduct->id_loja,
             'nome' => $obProduct->nome,
             'descricao' => $obProduct->descricao,
             'id_categoria' => $obProduct->id_categoria,
@@ -210,7 +208,7 @@ class Product extends Page {
         $postVars = $request->getPostVars();
 
         //ATUALIZA A INSTÂNCIA
-        $obProduct->id_loja = $obProduct->id_loja;
+        $obProduct->id_loja = $request->user->id_loja;
         $obProduct->uuid = $obProduct->uuid;
         $obProduct->nome = $postVars['nome'] ?? '';
         $obProduct->descricao = $postVars['descricao'] ?? '';
@@ -225,5 +223,33 @@ class Product extends Page {
 
         //REDIRECIONA O USUÁRIO
         $request->getRouter()->redirect('/admin/products/'.$obProduct->uuid.'/edit?status=updated');
+    }
+    
+    /**
+     * Método responsável por excluir um produto do banco de dados através do seu ID
+     *
+     * @param  Request $request
+     * @param  string $uuid
+     */
+    public static function setDeleteProduct($request,$uuid) {
+        //OBTEM O PRODUTO DO BANCO DE DADOS
+        $obProduct = EntityProduct::getProductByUuid($uuid);
+
+        //VALIDA A INSTANCIA
+        if(!$obProduct instanceof EntityProduct) {
+            $request->getRouter()->redirect('/admin/products');
+        }
+
+        //VALIDA SE O PRODUTO PERTENCE AO USUÁRIO LOGADO
+        if($request->user->id_loja != $obProduct->id_loja) {
+            $request->getRouter()->redirect('/admin/products');
+        }
+
+        //EXCLUI O PRODUTO
+        $obProduct->excluir();
+
+        //REDIRECIONA O USUÁRIO
+        $request->getRouter()->redirect('/admin/products?status=deleted');
+        
     }
 }

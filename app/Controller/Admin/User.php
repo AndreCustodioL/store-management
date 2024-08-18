@@ -39,6 +39,7 @@ class User extends Page {
             //VIEW DE DEPOIMENTOS
             $itens .= View::render('admin/modules/users/item', [
                 'id' => $obUser ->id,
+                'id_loja' => $obUser->id_loja,
                 'nome' => $obUser ->nome,
                 'email' => $obUser->email
             ]);
@@ -77,13 +78,14 @@ class User extends Page {
         //CONTEÚDO DO FORMULARIO
         $content = View::render('admin/modules/users/form',[
             'title' => 'Cadastrar Usuário',
+            'id_loja' => '',
             'nome' => '',
             'email' => '',
             'status' => self::getStatus($request)
         ]);
 
         //RETORNA A PÁGINA COMPLETA
-        return parent::getPanel('Admin Cadastrar Usuário',$content,'users');
+        return parent::getPanel('Cadastrar Usuário',$content,'users');
     }
     
     /**
@@ -94,6 +96,7 @@ class User extends Page {
     public static function setNewuser($request){
         //POST VARS
         $postVars = $request->getPostVars();
+        $id_loja = $postVars['id_loja'] ?? '';
         $nome = $postVars['nome'] ?? '';
         $email = $postVars['email'] ?? '';
         $senha = $postVars['senha'] ?? '';
@@ -107,6 +110,7 @@ class User extends Page {
         
         //NOVA INSTANCIA DE USUARIO
         $obUser = new EntityUser;
+        $obUser->id_loja = $id_loja;
         $obUser->nome = $nome;
         $obUser->email = $email;
         $obUser->senha = password_hash($senha,PASSWORD_DEFAULT);
@@ -167,6 +171,7 @@ class User extends Page {
         //CONTEÚDO DO FORMULARIO
         $content = View::render('admin/modules/users/form',[
             'title' => 'Editar Usuário',
+            'id_loja' => $obUser->id_loja,
             'nome' => $obUser->nome,
             'email' => $obUser->email,
             'status' => self::getStatus($request)
@@ -195,6 +200,7 @@ class User extends Page {
 
         //POST VARS
         $postVars = $request->getPostVars();
+        $id_loja = $postVars['id_loja'] ?? '';
         $nome = $postVars['nome'] ?? '';
         $email = $postVars['email'] ?? '';
         $senha = $postVars['senha'] ?? '';
@@ -207,6 +213,7 @@ class User extends Page {
         }
 
         //ATUALIZA A INSTÂNCIA
+        $obUser->id_loja = $id_loja;
         $obUser->nome = $nome;
         $obUser->email = $email;
         $obUser->senha = password_hash($senha,PASSWORD_DEFAULT);

@@ -79,3 +79,9 @@
 .current {
     color: #E63ED2;
 }
+
+/* Css para registros */
+
+.dropdown-toggle::after {
+    display: none;
+}
