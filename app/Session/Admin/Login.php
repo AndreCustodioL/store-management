@@ -3,7 +3,7 @@
 namespace App\Session\Admin;
 
 class Login{
-    
+ 
     /**
      * Método responsável por iniciar a sessão
      *

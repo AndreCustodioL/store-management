@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use \App\Session\Admin\Login as SessionAdminLogin;
+use \App\Utils\Auth;
 
 class RequireAdminLogin{
         
@@ -18,6 +19,8 @@ class RequireAdminLogin{
         if(!SessionAdminLogin::isLogged()){
             $request->getRouter()->redirect('/admin/login');
         }
+
+        $request->user = Auth::getUser();
         
         //EXECUTA O PRÓXIMO NÍVEL DO MIDDLEWARE
         return $next($request);
