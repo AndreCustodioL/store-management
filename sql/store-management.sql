@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18/08/2024 às 19:01
+-- Tempo de geração: 21/08/2024 às 19:42
 -- Versão do servidor: 8.0.35
 -- Versão do PHP: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `store-management`
 --
-CREATE DATABASE IF NOT EXISTS `store-management` DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
-USE `store-management`;
 
 -- --------------------------------------------------------
 
@@ -63,12 +61,27 @@ CREATE TABLE `produtos` (
   `nome` varchar(255) NOT NULL,
   `descricao` text NOT NULL,
   `id_categoria` int NOT NULL,
-  `un_venda` varchar(30) NOT NULL,
+  `id_un_compra` int NOT NULL,
+  `id_un_venda` int NOT NULL,
   `preco_custo` decimal(10,2) NOT NULL,
   `preco_venda` decimal(10,2) NOT NULL,
   `qtd_estoque` decimal(10,5) NOT NULL,
   `data_cadastro` timestamp NOT NULL,
   `data_atualizacao` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `unidades_medida`
+--
+
+CREATE TABLE `unidades_medida` (
+  `id` int NOT NULL,
+  `id_loja` int NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `sigla` varchar(5) NOT NULL,
+  `situacao` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -84,6 +97,13 @@ CREATE TABLE `usuarios` (
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Despejando dados para a tabela `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `id_loja`, `nome`, `email`, `senha`) VALUES
+(1, 1, 'Admin', 'admin@admin.com', '$2y$10$ga7WHAo.GSqkelf7g/bXUuMK9SJ90pfIKqEXpPr3UupA4g/47CpL2');
 
 --
 -- Índices para tabelas despejadas
