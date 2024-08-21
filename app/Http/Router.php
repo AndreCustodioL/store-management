@@ -210,7 +210,7 @@ class Router{
             }
         }
         //URL NÃO ENCONTRADA
-        throw new Exception("URL não encontrada", 404);
+        throw new Exception(\App\Utils\View::render('404'), 404);
     }
     
     /**

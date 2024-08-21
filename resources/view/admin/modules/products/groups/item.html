@@ -1,0 +1,14 @@
+<tr class="container">
+    <td>{{id_loja}}</td>
+    <td>{{id}}</td>
+    <td class="text-truncate text-nowrap" style="max-width: 250px;">{{nome}}</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="{{URL}}/admin/products/{{uuid}}/edit">Editar</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-bs-product-name="{{nome}}" data-bs-product-uuid="{{uuid}}">Excluir</a></li>
+            </ul>
+        </div>
+    </td>
+</tr>

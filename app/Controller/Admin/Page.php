@@ -25,12 +25,26 @@ class Page{
         'users' => [
             'label' => 'Usuários',
             'icon' => 'bi-person',
-            'link' => URL.'/admin/users'
+            'link' => URL.'/admin/users',
         ],
         'products' => [
             'label' => 'Produtos',
             'icon' => 'bi-box-seam',
-            'link' => URL.'/admin/products'
+            'link' => URL.'/admin/products',
+            'submenu' => [
+                'products' => [
+                    'label' => 'Produtos',
+                    'link' => URL.'/admin/products'
+                ],
+                'groups' => [
+                    'label' => 'Grupos',
+                    'link' => URL.'/admin/products/groups'
+                ],
+                'units' => [
+                    'label' => 'Unidades de medida',
+                    'link' => URL.'/admin/products/units'
+                ]
+            ]
         ]
     ];
     
@@ -47,6 +61,17 @@ class Page{
             'content' => $content
         ]);
     }
+
+    private static function getSubMenu($modules){
+        $links = '';
+        foreach($modules as $hash=>$module){
+            $links .= View::render('admin/menu/submenu/link-sub',[
+            'label' => $module['label'],
+            'link' => $module['link']
+        ]);
+        }
+        return $links;
+    }
     
     /**
      * Método responsável por renderizar a view do menu do painel
@@ -60,19 +85,38 @@ class Page{
         $links = '';
 
         //ITERA OS MÓDULOS
-        foreach(self::$modules as $hash=>$module){
-            $links .= View::render('admin/menu/link',[
-                'label' => $module['label'],
-                'icon' => $module['icon'],
-                'link' => $module['link'],
-                'current' => $hash == $currentModule ? 'current' : ''
-            ]);
+        foreach (self::$modules as $hash => $module) {
+            $links .= self::renderModuleLink($module, $hash == $currentModule,$hash);
         }
 
         //RETORNA A RENDERIZAÇÃO DO MENU
         return View::render('admin/menu/box',[
             'links' => $links
         ]);
+    }
+    
+    /**
+     * Método responsável por renderizar os links dinâmicos do menu (seja ele menu ou submenu)
+     *
+     * @param  string $module
+     * @param  string $isCurrent
+     * @return string
+     */
+    private static function renderModuleLink($module, $isCurrent,$hash) {
+        $viewData = [
+            'label' => $module['label'],
+            'hash' => $hash,
+            'icon' => $module['icon'],
+            'current' => $isCurrent ? 'current' : ''
+        ];
+        
+        if (isset($module['submenu'])) {
+            $viewData['submenu'] = self::getSubMenu($module['submenu']);
+            return View::render('admin/menu/submenu/link', $viewData);
+        }
+        
+        $viewData['link'] = $module['link'];
+        return View::render('admin/menu/link', $viewData);
     }
     
     /**

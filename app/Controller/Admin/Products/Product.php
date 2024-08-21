@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Products;
 
 use \App\Utils\View;
 use \App\Model\Entity\Product as EntityProduct;
 use \WilliamCosta\DatabaseManager\Pagination;
 use Ramsey\Uuid\Uuid;
+use \App\Controller\Admin\Page;
+use \App\Controller\Admin\Alert;
 
 class Product extends Page {
 
@@ -85,9 +87,9 @@ class Product extends Page {
             'title' => 'Cadastrar Produto',
             'nome' => '',
             'descricao' => '',
-            'id_categoria' => '',
-            'categorias' => Category::getCategoriesItems($request->user->id_loja),
-            'un_venda' => '',
+            'categorias' => Category::getOptionCategoriesItems($request->user->id_loja),
+            'unidades_compra' => UnitMeasure::getUnitMeasureItems($request->user->id_loja),
+            'unidades_venda' => UnitMeasure::getUnitMeasureItems($request->user->id_loja),
             'preco_custo' => '',
             'preco_venda' => '',
             'qtd_estoque' => '',
@@ -107,14 +109,15 @@ class Product extends Page {
         //POST VARS
         $postVars = $request->getPostVars();
         
-        //NOVA INSTANCIA DE DEPOIMENTO
+        //NOVA INSTANCIA DE PRODUTO
         $obProduct = new EntityProduct;
         $obProduct->id_loja = $request->user->id_loja;
         $obProduct->uuid = Uuid::uuid4()->toString();
         $obProduct->nome = $postVars['nome'] ?? '';
         $obProduct->descricao = $postVars['descricao'] ?? '';
         $obProduct->id_categoria = $postVars['id_categoria'] ?? '';
-        $obProduct->un_venda = $postVars['un_venda'] ?? '';
+        $obProduct->id_un_compra = $postVars['id_un_compra'] ?? '';
+        $obProduct->id_un_venda = $postVars['id_un_venda'] ?? '';
         $obProduct->preco_custo = $postVars['preco_custo'] ?? '';
         $obProduct->preco_venda = $postVars['preco_venda'] ?? '';
         $obProduct->qtd_estoque = $postVars['qtd_estoque'] ?? '';
@@ -176,9 +179,9 @@ class Product extends Page {
             'title' => 'Editar Produto',
             'nome' => $obProduct->nome,
             'descricao' => $obProduct->descricao,
-            'id_categoria' => $obProduct->id_categoria,
-            'categorias' => Category::getCategoriesItems($request->user->id_loja,$obProduct->id_categoria),
-            'un_venda' => $obProduct->un_venda,
+            'categorias' => Category::getOptionCategoriesItems($request->user->id_loja,$obProduct->id_categoria),
+            'unidades_compra' => UnitMeasure::getUnitMeasureItems($request->user->id_loja,$obProduct->id_un_compra),
+            'unidades_venda' => UnitMeasure::getUnitMeasureItems($request->user->id_loja,$obProduct->id_un_venda),
             'preco_custo' => $obProduct->preco_custo,
             'preco_venda' => $obProduct->preco_venda,
             'qtd_estoque' => $obProduct->qtd_estoque,
@@ -186,7 +189,7 @@ class Product extends Page {
         ]);
 
         //RETORNA A PÁGINA COMPLETA
-        return parent::getPanel('Admin Editar Produto',$content,'produtos');
+        return parent::getPanel('Editar Produto',$content,'products');
     }
     
     /**
@@ -198,7 +201,7 @@ class Product extends Page {
      */
     public static function setEditProduct($request,$uuid){
 
-        //OBTEM O DEPOIMENTO DO BANCO DE DADOS
+        //OBTEM O PRODUTO DO BANCO DE DADOS
         $obProduct = EntityProduct::getProductByUuid($uuid);
 
         //VALIDA A INSTANCIA
@@ -215,7 +218,8 @@ class Product extends Page {
         $obProduct->nome = $postVars['nome'] ?? '';
         $obProduct->descricao = $postVars['descricao'] ?? '';
         $obProduct->id_categoria = $postVars['id_categoria'] ?? '';
-        $obProduct->un_venda = $postVars['un_venda'] ?? '';
+        $obProduct->id_un_compra = $postVars['id_un_compra'] ?? '';
+        $obProduct->id_un_venda = $postVars['id_un_venda'] ?? '';
         $obProduct->preco_custo = $postVars['preco_custo'] ?? '';
         $obProduct->preco_venda = $postVars['preco_venda'] ?? '';
         $obProduct->qtd_estoque = $postVars['qtd_estoque'] ?? '';

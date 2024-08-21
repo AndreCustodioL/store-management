@@ -49,11 +49,18 @@ class Product {
     public $id_categoria;
     
     /**
+     * Unidade de compra do produto
+     *
+     * @var string
+     */
+    public $id_un_compra;
+    
+    /**
      * Unidade de venda do produto
      *
      * @var string
      */
-    public $un_venda;
+    public $id_un_venda;
     
     /**
      * Preço de custo do produto
@@ -108,7 +115,8 @@ class Product {
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'id_categoria' => $this->id_categoria,
-            'un_venda' => $this->un_venda,
+            'id_un_compra' => $this->id_un_compra,
+            'id_un_venda' => $this->id_un_venda,
             'preco_custo' => $this->preco_custo,
             'preco_venda' => $this->preco_venda,
             'qtd_estoque' => $this->qtd_estoque,
@@ -138,7 +146,8 @@ class Product {
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'id_categoria' => $this->id_categoria,
-            'un_venda' => $this->un_venda,
+            'id_un_compra' => $this->id_un_compra,
+            'id_un_venda' => $this->id_un_venda,
             'preco_custo' => $this->preco_custo,
             'preco_venda' => $this->preco_venda,
             'qtd_estoque' => $this->qtd_estoque,

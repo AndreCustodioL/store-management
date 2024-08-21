@@ -9,7 +9,7 @@ $obRouter->get('/admin/products',[
         'required-admin-login'
     ],
     function($request){
-        return new Response(200,Admin\Product::getProducts($request));
+        return new Response(200,Admin\Products\Product::getProducts($request));
     }
 ]);
 
@@ -19,7 +19,7 @@ $obRouter->get('/admin/products/new',[
         'required-admin-login'
     ],
     function($request){
-        return new Response(200,Admin\Product::getNewProduct($request));
+        return new Response(200,Admin\Products\Product::getNewProduct($request));
     }
 ]);
 
@@ -29,7 +29,7 @@ $obRouter->post('/admin/products/new',[
         'required-admin-login'
     ],
     function($request){
-        return new Response(200,Admin\Product::setNewProduct($request));
+        return new Response(200,Admin\Products\Product::setNewProduct($request));
     }
 ]);
 
@@ -39,7 +39,7 @@ $obRouter->get('/admin/products/{uuid}/edit',[
         'required-admin-login'
     ],
     function($request,$uuid){
-        return new Response(200,Admin\Product::getEditProduct($request,$uuid));
+        return new Response(200,Admin\Products\Product::getEditProduct($request,$uuid));
     }
 ]);
 
@@ -49,7 +49,7 @@ $obRouter->post('/admin/products/{uuid}/edit',[
         'required-admin-login'
     ],
     function($request,$uuid){
-        return new Response(200,Admin\Product::setEditProduct($request,$uuid));
+        return new Response(200,Admin\Products\Product::setEditProduct($request,$uuid));
     }
 ]);
 
@@ -59,6 +59,20 @@ $obRouter->get('/admin/products/{uuid}/delete',[
         'required-admin-login'
     ],
     function($request,$uuid){
-        return new Response(200,Admin\Product::setDeleteProduct($request,$uuid));
+        return new Response(200,Admin\Products\Product::setDeleteProduct($request,$uuid));
+    }
+]);
+
+
+
+//////////////////////////
+
+//ROTA DE LISTAGEM DE GRUPOS CADASTRADOS
+$obRouter->get('/admin/products/groups',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request){
+        return new Response(200,Admin\Products\Category::getCategories($request));
     }
 ]);
