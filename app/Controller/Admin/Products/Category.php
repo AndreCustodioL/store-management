@@ -8,6 +8,7 @@ use \App\Controller\Admin\Page;
 use \App\Controller\Admin\Alert;
 use \App\Model\Entity\Group as EntityGroup;
 use \WilliamCosta\DatabaseManager\Pagination;
+use \Ramsey\Uuid\Uuid;
 
 class Category extends Page {
     
@@ -75,12 +76,13 @@ class Category extends Page {
         $results = EntityCategory::getCategories('id_loja = '.$request->user->id_loja,'id DESC',$obPagination->getLimit());
 
         //RENDERIZA O ITEM
-        while($obGroup = $results->fetchObject(EntityCategory::class)){
+        while($obCategory = $results->fetchObject(EntityCategory::class)){
             //VIEW DE PRODUTOS
             $itens .= View::render('admin/modules/products/groups/item', [
-                'id_loja' => $obGroup ->id_loja,
-                'id' => $obGroup ->id,
-                'nome' => $obGroup ->nome
+                'id_loja' => $obCategory ->id_loja,
+                'id' => $obCategory ->id,
+                'uuid' =>$obCategory->uuid,
+                'nome' => $obCategory ->nome
             ]);
         }
 
@@ -105,6 +107,102 @@ class Category extends Page {
 
         //RETORNA A PÁGINA COMPLETA
         return parent::getPanel('Grupo de Produtos',$content,'products');
+    }
+    
+    /**
+     * Método responsável por retornar o formulário de cadastro de categorias
+     *
+     * @param  Request $request
+     * @return string
+     */
+    public static function getNewCategory($request){
+        //CONTEÚDO DO FORMULARIO
+        $content = View::render('admin/modules/products/groups/form',[
+            'title' => 'Cadastrar Grupo de Produto',
+            'nome' => '',
+            'status' => ''
+        ]);
+
+        //RETORNA A PÁGINA COMPLETA
+        return parent::getPanel('Cadastrar Grupo de Produto',$content,'products');
+    }
+    
+    /**
+     * Método responsável por incluir um novo registro de categoria no banco
+     *
+     * @param  Request $request
+     * @return string
+     */
+    public static function setNewCategory($request) {
+        $postVars = $request->getPostVars();
+
+        //NOVA INSTANCIA DE CATEGORIA
+        $obCategory = new EntityCategory();
+        $obCategory->id_loja = $request->user->id_loja;
+        $obCategory->uuid = Uuid::uuid4()->toString();
+        $obCategory->nome = $postVars['nome'];
+        $obCategory->situacao = 1;
+        $obCategory->cadastrar();
+        
+        //REDIRECIONA O USUÁRIO
+        $request->getRouter()->redirect('/admin/products/groups/'.$obCategory->uuid.'/edit?status=created');
+    }
+    
+    /**
+     * Método responsável por retornar o formulário de edição de categorias
+     *
+     * @param  Request $request
+     * @return string
+     */
+    public static function getEditCategory($request,$uuid){
+        //OBTEM A CATEGORIA DO BANCO DE DADOS
+        $obCategory = EntityCategory::getCategoryByUuid($uuid);
+
+        //VALIDA A INSTANCIA
+        if(!$obCategory instanceof EntityCategory){
+            $request->getRouter()->redirect('/admin/products/groups');
+        }
+
+        //CONTEÚDO DO FORMULARIO
+        $content = View::render('admin/modules/products/groups/form',[
+            'title' => 'Cadastrar Grupo de Produto',
+            'nome' => $obCategory->nome,
+            'status' => ''
+        ]);
+
+        //RETORNA A PÁGINA COMPLETA
+        return parent::getPanel('Editar Grupo de Produto',$content,'products');
+    }
+
+    
+    
+    /**
+     * Método responsável por incluir um novo registro de categoria no banco
+     *
+     * @param  Request $request
+     * @return string
+     */
+    public static function setEditCategory($request,$uuid) {
+        $postVars = $request->getPostVars();
+
+        //OBTEM A CATEGORIA DO BANCO DE DADOS
+        $obCategory = EntityCategory::getCategoryByUuid($uuid);
+
+        //VALIDA A INSTANCIA
+        if(!$obCategory instanceof EntityCategory){
+            $request->getRouter()->redirect('/admin/products/group');
+        }
+
+        //NOVA INSTANCIA DE CATEGORIA
+        $obCategory = new EntityCategory();
+        $obCategory->id_loja = $request->user->id_loja;
+        $obCategory->uuid = Uuid::uuid4()->toString();
+        $obCategory->nome = $postVars['nome'];
+        $obCategory->situacao = 1;
+        $obCategory->cadastrar();
+        
+        //REDIRECIONA O USUÁRIO
+        $request->getRouter()->redirect('/admin/products/groups/'.$obCategory->uuid.'/edit?status=created');
     }
 
     /**

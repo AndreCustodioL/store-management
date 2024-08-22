@@ -3,6 +3,60 @@
 use \App\Http\Response;
 use \App\Controller\Admin;
 
+//////////////////////////
+
+//ROTA DE LISTAGEM DE GRUPOS CADASTRADOS
+$obRouter->get('/admin/products/groups',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request){
+        return new Response(200,Admin\Products\Category::getCategories($request));
+    }
+]);
+
+//ROTA DE FORMULARIO DE CADASTRO DE GRUPOS
+$obRouter->get('/admin/products/groups/new',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request){
+        return new Response(200,Admin\Products\Category::getNewCategory($request));
+    }
+]);
+
+//ROTA DE FORMULARIO DE CADASTRO DE GRUPOS (POST)
+$obRouter->post('/admin/products/groups/new',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request){
+        return new Response(200,Admin\Products\Category::setNewCategory($request));
+    }
+]);
+
+//ROTA DE FORMULARIO DE EDIÇÃO DO CADASTRO DE GRUPOS
+$obRouter->get('/admin/products/groups/{uuid}/edit',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request,$uuid){
+        return new Response(200,Admin\Products\Category::getEditCategory($request,$uuid));
+    }
+]);
+
+//ROTA DE FORMULARIO DE EDIÇÃO DO CADASTRO DE GRUPOS (post)
+$obRouter->post('/admin/products/groups/{uuid}/edit',[
+    'middlewares' => [
+        'required-admin-login'
+    ],
+    function($request,$uuid){
+        return new Response(200,Admin\Products\Category::setEditCategory($request,$uuid));
+    }
+]);
+
+//////////////////////////////////////////////////////////////////////////
+
 //ROTA DE LISTAGEM DE PRODUTOS
 $obRouter->get('/admin/products',[
     'middlewares' => [
@@ -65,14 +119,3 @@ $obRouter->get('/admin/products/{uuid}/delete',[
 
 
 
-//////////////////////////
-
-//ROTA DE LISTAGEM DE GRUPOS CADASTRADOS
-$obRouter->get('/admin/products/groups',[
-    'middlewares' => [
-        'required-admin-login'
-    ],
-    function($request){
-        return new Response(200,Admin\Products\Category::getCategories($request));
-    }
-]);

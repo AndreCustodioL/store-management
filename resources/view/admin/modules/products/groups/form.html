@@ -1,0 +1,27 @@
+<h1>{{title}}</h1>
+
+<hr>
+
+<a href="{{URL}}/admin/products">
+    <button type="button" class="btn btn-warning">Voltar</button>
+</a>
+
+<hr>
+
+{{status}}
+
+
+<form method="POST">
+
+    <div class="card shadow">
+        <div class="card-body row g-3">
+            <h5 class="card-title">Parâmetros Gerais</h5>
+            <div class="form-group">
+                <label for="inputNome">Nome da categoria:</label>
+                <input type="text" name="nome" id="inputNome" class="form-control" value="{{nome}}">
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Cadastrar</button>
+        </div>
+    </div>
+
+</form>

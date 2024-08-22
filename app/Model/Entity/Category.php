@@ -18,6 +18,13 @@ class Category {
      * @var int
      */
     public $id;
+    
+    /**
+     * UUID da categoria
+     *
+     * @var mixed
+     */
+    public $uuid;
         
     /**
      * Nome da categoria
@@ -34,6 +41,36 @@ class Category {
     public $situacao;
     
     /**
+     * Método responsável por cadastra a instância atual no banco de dados
+     *
+     * @return void
+     */
+    public function cadastrar(){
+        $this->id = (new Database('categorias'))->insert([
+            'id_loja' => $this->id_loja,
+            'uuid' => $this->uuid,
+            'nome' => $this->nome,
+            'situacao' => $this->situacao
+        ]);
+
+        return true;
+    }
+    
+    /**
+     * Método responsável por atualizar a instância atual no banco de dados
+     *
+     * @return void
+     */
+    public function atualizar(){
+        return (new Database('categorias'))->update('uuid = "'.$this->uuid.'"',[
+            'id_loja' => $this->id_loja,
+            'id' => $this->id,
+            'uuid' => $this->uuid,
+            'nome' => $this->nome,
+        ]);
+    }
+    
+    /**
      * Método responsável por retornar categorias atráves do id da categoria e da loja
      *
      * @param  int $id_loja
@@ -42,6 +79,17 @@ class Category {
      */
     public static function getCategoryById($id_loja,$id) {
         return self::getCategories('id_loja = '.$id_loja.' AND '.'id = '.$id)->fetchObject(self::class);
+    }
+    
+    /**
+     * Método responsável por retornar categorias atráves do uuid da categoria e da loja
+     *
+     * @param  int $id_loja
+     * @param  int $id
+     * @return Category
+     */
+    public static function getCategoryByUuid($uuid) {
+        return self::getCategories('uuid = "'.$uuid.'"')->fetchObject(self::class);
     }
     
     /**
