@@ -16,7 +16,7 @@ class Auth {
             return null;
         }
 
-        return EntityUser::getUserByUuid($_SESSION['admin']['usuario']['id']);
+        return EntityUser::getUserByUuid($_SESSION['admin']['usuario']['uuid']);
     }
     
 }

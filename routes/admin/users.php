@@ -34,41 +34,41 @@ $obRouter->post('/admin/users/new',[
 ]);
 
 //ROTA DE EDIÇÃO DE UM USUÁRIO
-$obRouter->get('/admin/users/{id}/edit',[
+$obRouter->get('/admin/users/{uuid}/edit',[
     'middlewares' => [
         'required-admin-login'
     ],
-    function($request,$id){
-        return new Response(200,Admin\User::getEditUser($request,$id));
+    function($request,$uuid){
+        return new Response(200,Admin\User::getEditUser($request,$uuid));
     }
 ]);
 
 //ROTA DE EDIÇÃO DE UM USUÁRIO (post)
-$obRouter->post('/admin/users/{id}/edit',[
+$obRouter->post('/admin/users/{uuid}/edit',[
     'middlewares' => [
         'required-admin-login'
     ],
-    function($request,$id){
-        return new Response(200,Admin\User::setEditUser($request,$id));
+    function($request,$uuid){
+        return new Response(200,Admin\User::setEditUser($request,$uuid));
     }
 ]);
 
 //ROTA DE EXCLUSÃO DE UM USUÁRIO
-$obRouter->get('/admin/users/{id}/delete',[
+$obRouter->get('/admin/users/{uuid}/delete',[
     'middlewares' => [
         'required-admin-login'
     ],
-    function($request,$id){
-        return new Response(200,Admin\User::getDeleteUser($request,$id));
+    function($request,$uuid){
+        return new Response(200,Admin\User::getDeleteUser($request,$uuid));
     }
 ]);
 
 //ROTA DE EXCLUSÃO DE UM USUÁRIO (POST)
-$obRouter->post('/admin/users/{id}/delete',[
+$obRouter->post('/admin/users/{uuid}/delete',[
     'middlewares' => [
         'required-admin-login'
     ],
-    function($request,$id){
-        return new Response(200,Admin\User::setDeleteUser($request,$id));
+    function($request,$uuid){
+        return new Response(200,Admin\User::setDeleteUser($request,$uuid));
     }
 ]);

@@ -114,7 +114,7 @@ class User{
      * @return boolean
      */
     public function atualizar(){
-        return (new Database('usuarios'))->update('uuid = '.$this->uuid,[
+        return (new Database('usuarios'))->update('uuid = "'.$this->uuid.'"',[
             'uuid' => $this->uuid,
             'id' => $this->id,
             'id_loja' => $this->id_loja,
@@ -135,7 +135,9 @@ class User{
      * @return boolean
      */
     public function excluir(){
-        return (new Database('usuarios'))->delete('id = '.$this->id);
+        return (new Database('usuarios'))->update('uuid = "'.$this->uuid.'"',[
+            'situacao' => 0
+        ]);
     }
     
     /**
@@ -145,7 +147,7 @@ class User{
      * @return User
      */
     public static function getUserByUuid($uuid){
-        return self::getUsers('uuid = '.$uuid)->fetchObject(self::class);
+        return self::getUsers('uuid = "'.$uuid.'"')->fetchObject(self::class);
     }
     
     /**

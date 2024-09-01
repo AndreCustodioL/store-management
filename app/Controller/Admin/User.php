@@ -38,7 +38,8 @@ class User extends Page {
         while($obUser = $results->fetchObject(EntityUser::class)){
             //VIEW DE DEPOIMENTOS
             $itens .= View::render('admin/modules/users/item', [
-                'id' => $obUser ->id,
+                'uuid' => $obUser ->uuid,
+                'id' => $obUser->id,
                 'id_loja' => $obUser->id_loja,
                 'nome' => $obUser ->nome,
                 'email' => $obUser->email
@@ -207,7 +208,7 @@ class User extends Page {
 
         //VALIDA O E-MAIL DO USUÁRIO
         $obUserEmail = EntityUser::getUserByEmail($email);
-        if($obUserEmail instanceof EntityUser && $obUserEmail->id != $uuid){
+        if($obUserEmail instanceof EntityUser && $obUserEmail->uuid != $uuid){
             //REDIRECIONA O USUÁRIO
             $request->getRouter()->redirect('/admin/users/'.$uuid.'/edit?status=duplicated');
         }

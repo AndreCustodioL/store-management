@@ -27,7 +27,7 @@ class Login{
 
         //INICIA A SESSAO DO USUARIO
         $_SESSION['admin']['usuario'] = [
-            'id' => $obUser->id,
+            'uuid' => $obUser->uuid,
             'nome' => $obUser->nome,
             'email' => $obUser->nome
         ];
@@ -46,7 +46,7 @@ class Login{
         self::init();
 
         //RETORNA A VERIFICAÇÃO
-        return isset($_SESSION['admin']['usuario']['id']);
+        return isset($_SESSION['admin']['usuario']['uuid']);
     }
     
     /**

@@ -179,7 +179,7 @@ class UnitMeasure {
      * @return PDOStatement
      */
     public static function getUnits($where = null, $order = null, $limit = null, $fields = '*'){
-        return (new Database('unidades_medida'))->select($where,$order,$limit,$fields);
+        return (new Database('unidade_medida'))->select($where,$order,$limit,$fields);
     }
 
 

@@ -6,7 +6,6 @@ use \App\Model\Entity\Category as EntityCategory;
 use \App\Utils\View;
 use \App\Controller\Admin\Page;
 use \App\Controller\Admin\Alert;
-use \App\Model\Entity\Group as EntityGroup;
 use \WilliamCosta\DatabaseManager\Pagination;
 use \Ramsey\Uuid\Uuid;
 
@@ -120,7 +119,8 @@ class Category extends Page {
         $content = View::render('admin/modules/products/groups/form',[
             'title' => 'Cadastrar Grupo de Produto',
             'nome' => '',
-            'status' => ''
+            'status' => '',
+            'button' => 'Cadastrar'
         ]);
 
         //RETORNA A PÁGINA COMPLETA
@@ -165,9 +165,10 @@ class Category extends Page {
 
         //CONTEÚDO DO FORMULARIO
         $content = View::render('admin/modules/products/groups/form',[
-            'title' => 'Cadastrar Grupo de Produto',
+            'title' => 'Editar Grupo de Produto',
             'nome' => $obCategory->nome,
-            'status' => ''
+            'status' => '',
+            'button' => 'Editar'
         ]);
 
         //RETORNA A PÁGINA COMPLETA
@@ -177,7 +178,7 @@ class Category extends Page {
     
     
     /**
-     * Método responsável por incluir um novo registro de categoria no banco
+     * Método responsável por editar um registro de categoria no banco
      *
      * @param  Request $request
      * @return string
@@ -203,6 +204,26 @@ class Category extends Page {
         
         //REDIRECIONA O USUÁRIO
         $request->getRouter()->redirect('/admin/products/groups/'.$obCategory->uuid.'/edit?status=created');
+    }
+
+    public static function setDeleteCategory($request,$uuid){
+        //OBTEM A CATEGORIA DO BANCO DE DADOS
+        $obCategory = EntityCategory::getCategoryByUuid($uuid);
+
+        //VALIDA A INSTANCIA
+        if(!$obCategory instanceof EntityCategory) {
+            $request->getRouter()->redirect('admin/products/group');
+        }
+
+        //VALIDA SE A CATEGORIA PERTENCE A MESMA LOJA DO USUÁRIO QUE REQUISITOU
+        if($obCategory->id_loja != $request->user->id_categoria) {
+            $request->getRouter()->redirect('admin/products/group');
+        }
+
+        //ALTERA A SITUAÇÃO DA CATEGORIA DENTRO DO BANCO DE DADOS
+        $obCategory->excluir();
+
+        $request->getRouter()->redirect('/admin/products/groups?status=deleted');
     }
 
     /**

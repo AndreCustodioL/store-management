@@ -72,7 +72,7 @@ class Product extends Page {
         ]);
 
         //RETORNA A PÁGINA COMPLETA
-        return parent::getPanel('Admin Produtos',$content,'products');
+        return parent::getPanel('Produtos cadastrados',$content,'products');
     }
     
     /**
@@ -111,18 +111,17 @@ class Product extends Page {
         
         //NOVA INSTANCIA DE PRODUTO
         $obProduct = new EntityProduct;
+
+        //ATRIBUI PROPRIEDADES QUE NÃO VEM DO POSTVARS
         $obProduct->id_loja = $request->user->id_loja;
         $obProduct->uuid = Uuid::uuid4()->toString();
-        $obProduct->nome = $postVars['nome'] ?? '';
-        $obProduct->descricao = $postVars['descricao'] ?? '';
-        $obProduct->id_categoria = $postVars['id_categoria'] ?? '';
-        $obProduct->id_un_compra = $postVars['id_un_compra'] ?? '';
-        $obProduct->id_un_venda = $postVars['id_un_venda'] ?? '';
-        $obProduct->preco_custo = $postVars['preco_custo'] ?? '';
-        $obProduct->preco_venda = $postVars['preco_venda'] ?? '';
-        $obProduct->qtd_estoque = $postVars['qtd_estoque'] ?? '';
-        $obProduct->data_cadastro = date('Y-m-d H:i:s');
-        $obProduct->data_atualizacao = date('Y-m-d H:i:s');
+
+        //MAPEIA E PREENCHE OS ATRIBUTOS DA INSTANCIA DE PRODUTOS COM AS VARIAVEIS DO POST
+        foreach ($postVars as $key => $value) {
+            if (property_exists($obProduct, $key)) {
+                $obProduct->$key = $value;
+            }
+        }
         $obProduct->cadastrar();
 
         //REDIRECIONA O USUÁRIO
@@ -182,7 +181,7 @@ class Product extends Page {
             'categorias' => Category::getOptionCategoriesItems($request->user->id_loja,$obProduct->id_categoria),
             'unidades_compra' => UnitMeasure::getUnitMeasureItems($request->user->id_loja,$obProduct->id_un_compra),
             'unidades_venda' => UnitMeasure::getUnitMeasureItems($request->user->id_loja,$obProduct->id_un_venda),
-            'preco_custo' => $obProduct->preco_custo,
+            'preco_custo' => $obProduct->preco_compra,
             'preco_venda' => $obProduct->preco_venda,
             'qtd_estoque' => $obProduct->qtd_estoque,
             'status' => self::getStatus($request)
@@ -212,19 +211,12 @@ class Product extends Page {
         //POST VARS
         $postVars = $request->getPostVars();
 
-        //ATUALIZA A INSTÂNCIA
-        $obProduct->id_loja = $request->user->id_loja;
-        $obProduct->uuid = $obProduct->uuid;
-        $obProduct->nome = $postVars['nome'] ?? '';
-        $obProduct->descricao = $postVars['descricao'] ?? '';
-        $obProduct->id_categoria = $postVars['id_categoria'] ?? '';
-        $obProduct->id_un_compra = $postVars['id_un_compra'] ?? '';
-        $obProduct->id_un_venda = $postVars['id_un_venda'] ?? '';
-        $obProduct->preco_custo = $postVars['preco_custo'] ?? '';
-        $obProduct->preco_venda = $postVars['preco_venda'] ?? '';
-        $obProduct->qtd_estoque = $postVars['qtd_estoque'] ?? '';
-        $obProduct->data_cadastro = $obProduct->data_cadastro;
-        $obProduct->data_atualizacao = date('Y-m-d H:i:s');
+        //MAPEIA E PREENCHE OS ATRIBUTOS DA INSTANCIA DE PRODUTOS COM AS VARIAVEIS DO POST
+        foreach ($postVars as $key => $value) {
+            if (property_exists($obProduct, $key)) {
+                $obProduct->$key = $value;
+            }
+        }
         $obProduct->atualizar();
 
         //REDIRECIONA O USUÁRIO
