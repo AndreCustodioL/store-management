@@ -4,65 +4,65 @@ namespace App\Model\Entity;
 
 use \WilliamCosta\DatabaseManager\Database;
 
-class UnitMeasure {    
+class PricingTable {
     /**
-    * UUID (Universally Unique Identifier) da unidade de medida
+    * UUID (Universally Unique Identifier) da tabela de preço
     *
     * @var string
     */
     public $uuid;
 
     /**
-    * ID da unidade de medida
+    * ID da tabela de preço
     *
     * @var int
     */
     public $id;
 
     /**
-    * ID da loja associada a esta unidade de medida
+    * ID da loja associada a esta tabela de preço
     *
     * @var int
     */
     public $id_loja;
 
     /**
-    * Nome da unidade de medida
+    * Nome da tabela de preço
     *
     * @var string
     */
     public $nome;
 
     /**
-    * Sigla da unidade de medida
+    * Tipo de cálculo da tabela de preço
     *
     * @var string
     */
-    public $sigla;
+    public $tipo_calculo;
 
     /**
-    * Indica se a unidade de medida é fracionável
+    * Percentual aplicado na tabela de preço
     *
-    * @var bool
+    * @var double
     */
-    public $fracionavel;
+    public $percentual;
 
     /**
-    * Situação da unidade de medida (ativo ou inativo)
+    * Situação da tabela de preço (ativo ou inativo)
     *
     * @var bool
     */
     public $situacao;
 
     /**
-    * Data e hora de cadastro da unidade de medida
+    * Data e hora de cadastro da tabela de preço
     *
     * @var string
     */
     public $data_cadastro;
 
     /**
-    * Data e hora de modificação da unidade de medida
+    * Data e hora de modificação da tabela de preço
     *
     * @var string
     */
@@ -88,13 +88,13 @@ class UnitMeasure {
      * @return boolean
      */
     public function cadastrar(){
-        $this->id = (new Database('unidade_medida'))->insert([
+        $this->id = (new Database('tabela_preco'))->insert([
             'uuid' => $this->uuid,
             'id' => $this->id,
             'id_loja' => $this->id_loja,
             'nome' => $this->nome,
-            'sigla' => $this->sigla,
-            'fracionavel' => $this->fracionavel,
+            'tipo_calculo' => $this->tipo_calculo,
+            'percentual' => $this->percentual,
             'situacao' => $this->situacao,
             'data_cadastro' => $this->data_cadastro,
             'data_modificacao' => $this->data_modificacao,
@@ -111,13 +111,13 @@ class UnitMeasure {
      * @return boolean
      */
     public function atualizar(){
-        return (new Database('unidade_medida'))->update('uuid = "'.$this->uuid.'"',[
+        return (new Database('tabela_preco'))->update('uuid = "'.$this->uuid.'"',[
             'uuid' => $this->uuid,
             'id' => $this->id,
             'id_loja' => $this->id_loja,
             'nome' => $this->nome,
-            'sigla' => $this->sigla,
-            'fracionavel' => $this->fracionavel,
+            'tipo_calculo' => $this->tipo_calculo,
+            'percentual' => $this->percentual,
             'situacao' => $this->situacao,
             'data_cadastro' => $this->data_cadastro,
             'data_modificacao' => $this->data_modificacao,
@@ -127,50 +127,29 @@ class UnitMeasure {
     }
 
     /**
-     * Método responsável por "excluir" uma unidade de medida do banco de dados
+     * Método responsável por "excluir" uma tabela de preço do banco de dados
      *
      * @return boolean
      */
     public function excluir(){
-        //EXCLUI A UNIDADE DE MEDIDA NO BANCO DE DADOS
-        return (new Database('unidade_medida'))->update('uuid = "'.$this->uuid.'"',[
+        //EXCLUI A PESSOA NO BANCO DE DADOS
+        return (new Database('tabela_preco'))->update('uuid = "'.$this->uuid.'"',[
             'situacao' => 0
         ]);
     }
     
     /**
-     * Método responsável por retornar as unidades de medida através do seu uuid
+     * Método responsável por retornar a tabela de preço baseado no seu uuid
      *
      * @param  string $uuid
-     * @return UnitMeasure
+     * @return PricingTable
      */
-    public static function getUnitMeasureByUuid($uuid){
-        return self::getUnits('uuid = "'.$uuid.'"')->fetchObject(self::class);
+    public static function getPricingTableByUuid($uuid){
+        return self::getOrganizations("uuid = '".$uuid."'")->fetchObject(self::class);
     }
     
     /**
-     * Método responsável por retornar as unidades de medida através do seu id e da loja
-     *
-     * @param  int $id_loja
-     * @param  int $id
-     * @return UnitMeasure
-     */
-    public static function getUnitMeasureById($id_loja,$id) {
-        return self::getUnits('id_loja = '.$id_loja.' AND '.'id = '.$id)->fetchObject(self::class);
-    }
-    
-    /**
-     * Método responsável por retornar as unidades de medida cadastradas em uma loja
-     *
-     * @param  int $id_loja
-     * @return PDOStatement
-     */
-    public static function getUnitsByShop($id_loja) {
-        return self::getUnits('id_loja = '.$id_loja);
-    }
-    
-    /**
-     * Método responsável por retornar unidades de medida
+     * Método responsável por retornar tabelas de preço
      *
      * @param  string $where
      * @param  string $order
@@ -178,9 +157,7 @@ class UnitMeasure {
      * @param  string $fields
      * @return PDOStatement
      */
-    public static function getUnits($where = null, $order = null, $limit = null, $fields = '*'){
-        return (new Database('unidades_medida'))->select($where,$order,$limit,$fields);
+    public static function getOrganizations($where = null, $order = null, $limit = null, $fields = '*'){
+        return (new Database('tabela_preco'))->select($where,$order,$limit,$fields);
     }
-
-
 }

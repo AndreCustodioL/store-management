@@ -66,22 +66,22 @@ class User extends Api{
      * Método responsável por retornar os detalhes de um usuário
      *
      * @param  Request $request
-     * @param  int $id
+     * @param  int $uuid
      * @return array
      */
-    public static function getUser($request,$id){
+    public static function getUser($request,$uuid){
         //VALIDA O ID DO USUÁRIO
-        if(!is_numeric($id)){
-            throw new \Exception("O id '".$id."' Não é válido",400);
+        if(!is_string($uuid)){
+            throw new \Exception("O id '".$uuid."' Não é válido",400);
         }
 
 
         //BUSCA USUÁRIO
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA SE O USUÁRIO EXISTE
         if(!$obUser instanceof EntityUser) {
-            throw new \Exception("O Usuário ".$id." Não foi encontrado",404);
+            throw new \Exception("O Usuário ".$uuid." Não foi encontrado",404);
         }
 
         //RETORNA OS DETALHES DO USUÁRIO
@@ -152,7 +152,7 @@ class User extends Api{
      * @param  int $int
      * @return array
      */
-    public static function setEditUser($request,$id){
+    public static function setEditUser($request,$uuid){
         //POST VARS
         $postVars = $request->getPostVars();
 
@@ -162,11 +162,11 @@ class User extends Api{
         }
 
         //BUSCA O USUÁRIO NO BANCO
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser) {
-            throw new \Exception("O Usuário ".$id." Não foi encontrado",404);
+            throw new \Exception("O Usuário ".$uuid." Não foi encontrado",404);
         }
 
         //VALIDA A DUPLICAÇÃO DE USUÁRIOS
@@ -196,13 +196,13 @@ class User extends Api{
      * @param  int $int
      * @return array
      */
-    public static function setDeleteUser($request,$id){
+    public static function setDeleteUser($request,$uuid){
         //BUSCA O Usuário NO BANCO
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser) {
-            throw new \Exception("O Usuário ".$id." Não foi encontrado",404);
+            throw new \Exception("O Usuário ".$uuid." Não foi encontrado",404);
         }
 
         //IMPEDE A EXCLUSÃO DO PRÓPRIO CADASTRO

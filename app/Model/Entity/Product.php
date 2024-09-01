@@ -7,12 +7,12 @@ use \WilliamCosta\DatabaseManager\Database;
 class Product {
     
     /**
-     * ID da loja onde este produto está cadastrado
+     * UUID (Universally Unique Identifier) do produto
      *
-     * @var int
+     * @var string
      */
-    public $id_loja;
-    
+    public $uuid;
+
     /**
      * ID do produto
      *
@@ -21,11 +21,11 @@ class Product {
     public $id;
     
     /**
-     * UUID (Universally Unique Identifier) do produto
+     * ID da loja onde este produto está cadastrado
      *
-     * @var string
+     * @var int
      */
-    public $uuid;
+    public $id_loja;
     
     /**
      * Nome do produto
@@ -49,37 +49,51 @@ class Product {
     public $id_categoria;
     
     /**
-     * Unidade de compra do produto
+     * ID da Unidade de compra do produto
      *
-     * @var string
+     * @var int
      */
     public $id_un_compra;
     
     /**
-     * Unidade de venda do produto
+     * ID da Unidade de venda do produto
      *
-     * @var string
+     * @var int
      */
     public $id_un_venda;
     
     /**
+     * Fator de conversão do produto (UN Compra x UN Venda)
+     *
+     * @var double
+     */
+    public $fator_conversao;
+    
+    /**
      * Preço de custo do produto
      *
-     * @var float
+     * @var double
      */
-    public $preco_custo;
+    public $preco_compra;
+    
+    /**
+     * Markup do preço de venda
+     *
+     * @var double
+     */
+    public $markup_preco_venda;
     
     /**
      * Preço de venda do produto
      *
-     * @var float
+     * @var double
      */
     public $preco_venda;
     
     /**
      * Quantidade em estoque do produto
      *
-     * @var float
+     * @var double
      */
     public $qtd_estoque;
     
@@ -95,7 +109,89 @@ class Product {
      *
      * @var string
      */
-    public $data_atualizacao;
+    public $data_modificacao;
+    
+    /**
+     * ID do fornecedor do produto
+     *
+     * @var int
+     */
+    public $id_fornecedor;
+    
+    /**
+     * ID do tipo do produto
+     *
+     * @var int
+     */
+    public $tipo_produto;
+    
+    /**
+     * NCM do produto
+     *
+     * @var string
+     */
+    public $ncm;
+    
+    /**
+     * CST ICMS do produto
+     *
+     * @var string
+     */
+    public $cst_icms;
+    
+    /**
+     * Origem fiscal do produto
+     *
+     * @var string
+     */
+    public $origem_produto;
+    
+    /**
+     * CEST do produto
+     *
+     * @var string
+     */
+    public $cest;
+    
+    /**
+     * Imagem Principal do produto
+     *
+     * @var string
+     */
+    public $imagem_principal;
+    
+    /**
+     * Situacao (ativo ou inativo) do produto
+     *
+     * @var boolean
+     */
+    public $situacao;
+    
+    /**
+     * UUID do usuário em que fez a modificação
+     *
+     * @var mixed
+     */
+    public $id_usuario_modificacao;
+    
+    /**
+     * UUID do usuário em que fez o cadastro
+     *
+     * @var string
+     */
+    public $id_usuario_cadastro;
+    
+    /**
+     * Método responsável por calcular o markup do produto
+     *
+     * @param  double $preco_compra
+     * @param  double $preco_venda
+     * @return double
+     */
+    private function calcularMarkup($preco_compra,$preco_venda){
+        if($preco_compra == 0) return 0;
+        return (($preco_venda - $preco_compra) / $preco_compra) * 100;
+    }
 
     /**
      * Método responsável por cadastrar a instância atual no banco de dados
@@ -104,24 +200,37 @@ class Product {
      */
     public function cadastrar(){
         //DEFINE A DATA
-        $this->data_cadastro = $this->data_atualizacao = date('Y-m-d H:i:s');
+        $this->data_cadastro = $this->data_modificacao = date('Y-m-d H:i:s');
+        $this->markup_preco_venda = $this->calcularMarkup($this->preco_compra,$this->preco_venda);
         
 
         //INSERE O PRODUTO NO BANCO DE DADOS
         $this->id = (new Database('produtos'))->insert([
-            'id_loja' => $this->id_loja,
-            'id' => $this->id,
             'uuid' => $this->uuid,
+            'id' => $this->id,
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'id_categoria' => $this->id_categoria,
             'id_un_compra' => $this->id_un_compra,
             'id_un_venda' => $this->id_un_venda,
-            'preco_custo' => $this->preco_custo,
+            'fator_conversao' => $this->fator_conversao,
+            'preco_compra' => $this->preco_compra,
+            'markup_preco_venda' => $this->markup_preco_venda,
             'preco_venda' => $this->preco_venda,
             'qtd_estoque' => $this->qtd_estoque,
             'data_cadastro' => $this->data_cadastro,
-            'data_atualizacao' => $this->data_atualizacao
+            'data_modificacao' => $this->data_modificacao,
+            'id_fornecedor' => $this->id_fornecedor,
+            'tipo_produto' => $this->tipo_produto,
+            'ncm' => $this->ncm,
+            'cst_icms' => $this->cst_icms,
+            'origem_produto' => $this->origem_produto,
+            'cest' => $this->cest,
+            'imagem_principal' => $this->imagem_principal,
+            'situacao' => $this->situacao,
+            'id_usuario_modificacao' => $this->id_usuario_modificacao,
+            'id_usuario_cadastro' => $this->id_usuario_cadastro,
         ]);
 
         //SUCESSO
@@ -136,35 +245,50 @@ class Product {
      */
     public function atualizar(){
         //DEFINE A DATA
-        $this->data_atualizacao = date('Y-m-d H:i:s');
+        $this->data_modificacao = date('Y-m-d H:i:s');
 
         //ATUALIZA O DEPOIMENTO NO BANCO DE DADOS
         return (new Database('produtos'))->update('uuid = "'.$this->uuid.'"',[
-            'id_loja' => $this->id_loja,
-            'id' => $this->id,
             'uuid' => $this->uuid,
+            'id' => $this->id,
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'id_categoria' => $this->id_categoria,
             'id_un_compra' => $this->id_un_compra,
             'id_un_venda' => $this->id_un_venda,
-            'preco_custo' => $this->preco_custo,
+            'fator_conversao' => $this->fator_conversao,
+            'preco_compra' => $this->preco_compra,
+            'markup_preco_venda' => $this->markup_preco_venda,
             'preco_venda' => $this->preco_venda,
             'qtd_estoque' => $this->qtd_estoque,
             'data_cadastro' => $this->data_cadastro,
-            'data_atualizacao' => $this->data_atualizacao
+            'data_modificacao' => $this->data_modificacao,
+            'id_fornecedor' => $this->id_fornecedor,
+            'tipo_produto' => $this->tipo_produto,
+            'ncm' => $this->ncm,
+            'cst_icms' => $this->cst_icms,
+            'origem_produto' => $this->origem_produto,
+            'cest' => $this->cest,
+            'imagem_principal' => $this->imagem_principal,
+            'situacao' => $this->situacao,
+            'id_usuario_modificacao' => $this->id_usuario_modificacao,
+            'id_usuario_cadastro' => $this->id_usuario_cadastro,
+
         ]);
 
     }
 
     /**
-     * Método responsável por excluir um produto do banco de dados
+     * Método responsável por "excluir" um produto do banco de dados
      *
      * @return boolean
      */
     public function excluir(){
         //EXCLUI O PRODUTO NO BANCO DE DADOS
-        return (new Database('produtos'))->delete('id_loja = '.$this->id_loja.' AND '.'id = '.$this->id);
+        return (new Database('produtos'))->update('uuid = "'.$this->uuid.'"',[
+            'situacao' => 0
+        ]);
 
     }
     
@@ -181,7 +305,7 @@ class Product {
     /**
      * Método responsável por retornar um produto com base no seu uuid 
      *
-     * @param  int $id
+     * @param  string $uuid
      * @return Product
      */
     public static function getProductByUuid($uuid){

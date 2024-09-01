@@ -5,27 +5,28 @@ namespace App\Model\Entity;
 use WilliamCosta\DatabaseManager\Database;
 
 class Category {    
-    /**
-     * ID da Loja que detém a categoria cadastrada
-     *
-     * @var int
-     */
-    public $id_loja;
-        
-    /**
-     * ID da Categoria de produtos
-     *
-     * @var int
-     */
-    public $id;
-    
+
     /**
      * UUID da categoria
      *
      * @var mixed
      */
     public $uuid;
-        
+
+    /**
+     * ID da Categoria de produtos
+     *
+     * @var int
+     */
+    public $id;
+
+    /**
+     * ID da Loja que detém a categoria cadastrada
+     *
+     * @var int
+     */
+    public $id_loja;
+              
     /**
      * Nome da categoria
      *
@@ -41,16 +42,48 @@ class Category {
     public $situacao;
     
     /**
-     * Método responsável por cadastra a instância atual no banco de dados
+     * Data e hora em que a categoria foi cadastrada
      *
-     * @return void
+     * @var string
+     */
+    public $data_cadastro;
+
+    /**
+     * Data e hora em que a categoria foi alterada
+     *
+     * @var string
+     */
+    public $data_modificacao;
+  
+    /**
+     * ID do usuário que modificou o registro
+     *
+     * @var string
+     */
+    public $id_usuario_modificacao;
+  
+    /**
+     * ID do usuário que cadastrou o registro
+     *
+     * @var string
+     */
+    public $id_usuario_cadastro;
+    
+    /**
+     * Método responsável por cadastrar a instância atual no banco de dados
+     *
+     * @return boolean
      */
     public function cadastrar(){
         $this->id = (new Database('categorias'))->insert([
-            'id_loja' => $this->id_loja,
             'uuid' => $this->uuid,
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
-            'situacao' => $this->situacao
+            'situacao' => $this->situacao,
+            'data_cadastro' => $this->data_cadastro,
+            'data_modificacao' => $this->data_modificacao,
+            'id_usuario_modificacao' => $this->id_usuario_modificacao,
+            'id_usuario_cadastro' => $this->id_usuario_cadastro,
         ]);
 
         return true;
@@ -59,19 +92,35 @@ class Category {
     /**
      * Método responsável por atualizar a instância atual no banco de dados
      *
-     * @return void
+     * @return boolean
      */
     public function atualizar(){
         return (new Database('categorias'))->update('uuid = "'.$this->uuid.'"',[
-            'id_loja' => $this->id_loja,
-            'id' => $this->id,
             'uuid' => $this->uuid,
+            'id_loja' => $this->id_loja,
             'nome' => $this->nome,
+            'situacao' => $this->situacao,
+            'data_cadastro' => $this->data_cadastro,
+            'data_modificacao' => $this->data_modificacao,
+            'id_usuario_modificacao' => $this->id_usuario_modificacao,
+            'id_usuario_cadastro' => $this->id_usuario_cadastro,
+        ]);
+    }
+
+    /**
+     * Método responsável por "excluir" uma categoria do banco de dados
+     *
+     * @return boolean
+     */
+    public function excluir(){
+        //EXCLUI A CATEGORIA NO BANCO DE DADOS
+        return (new Database('categorias'))->update('uuid = "'.$this->uuid.'"',[
+            'situacao' => 0
         ]);
     }
     
     /**
-     * Método responsável por retornar categorias atráves do id da categoria e da loja
+     * Método responsável por retornar categorias através do id da categoria e da loja
      *
      * @param  int $id_loja
      * @param  int $id
@@ -82,10 +131,9 @@ class Category {
     }
     
     /**
-     * Método responsável por retornar categorias atráves do uuid da categoria e da loja
+     * Método responsável por retornar categorias através do uuid da categoria
      *
-     * @param  int $id_loja
-     * @param  int $id
+     * @param  string $uuid
      * @return Category
      */
     public static function getCategoryByUuid($uuid) {

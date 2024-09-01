@@ -154,14 +154,14 @@ class User extends Page {
     /**
      * Método responsável por retornar o formulário de edição de um usuário
      *
-     * @param  Request $request
-     * @param int $id
+     * @param Request $request
+     * @param string $uuid
      * @return string
      */
-    public static function getEditUser($request,$id){
+    public static function getEditUser($request,$uuid){
 
         //OBTEM O USUÁRIO DO BANCO DE DADOS
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser){
@@ -188,10 +188,10 @@ class User extends Page {
      * @param int $id
      * @return string
      */
-    public static function setEditUser($request,$id){
+    public static function setEditUser($request,$uuid){
 
         //OBTEM O USUÁRIO DO BANCO DE DADOS
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser){
@@ -207,9 +207,9 @@ class User extends Page {
 
         //VALIDA O E-MAIL DO USUÁRIO
         $obUserEmail = EntityUser::getUserByEmail($email);
-        if($obUserEmail instanceof EntityUser && $obUserEmail->id != $id){
+        if($obUserEmail instanceof EntityUser && $obUserEmail->id != $uuid){
             //REDIRECIONA O USUÁRIO
-            $request->getRouter()->redirect('/admin/users/'.$id.'/edit?status=duplicated');
+            $request->getRouter()->redirect('/admin/users/'.$uuid.'/edit?status=duplicated');
         }
 
         //ATUALIZA A INSTÂNCIA
@@ -220,7 +220,7 @@ class User extends Page {
         $obUser->atualizar();
 
         //REDIRECIONA O USUÁRIO
-        $request->getRouter()->redirect('/admin/users/'.$obUser->id.'/edit?status=updated');
+        $request->getRouter()->redirect('/admin/users/'.$obUser->uuid.'/edit?status=updated');
     }
     
     /**
@@ -230,10 +230,10 @@ class User extends Page {
      * @param int $id
      * @return string
      */
-    public static function getDeleteUser($request,$id){
+    public static function getDeleteUser($request,$uuid){
 
         //OBTEM O USUÁRIO DO BANCO DE DADOS
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser){
@@ -251,16 +251,16 @@ class User extends Page {
     }
     
     /**
-     * Método responsável por excluir um depoimento
+     * Método responsável por excluir um usuário
      *
      * @param  Request $request
      * @param int $id
      * @return string
      */
-    public static function setDeleteUser($request,$id){
+    public static function setDeleteUser($request,$uuid){
 
         //OBTEM O USUÁRIO DO BANCO DE DADOS
-        $obUser = EntityUser::getUserById($id);
+        $obUser = EntityUser::getUserByUuid($uuid);
 
         //VALIDA A INSTANCIA
         if(!$obUser instanceof EntityUser){
