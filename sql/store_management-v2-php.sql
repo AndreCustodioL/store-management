@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25/08/2024 às 18:33
+-- Tempo de geração: 01/09/2024 às 19:28
 -- Versão do servidor: 8.0.35
 -- Versão do PHP: 8.2.12
 
@@ -40,6 +40,22 @@ CREATE TABLE `categorias` (
   `id_usuario_modificacao` int DEFAULT NULL,
   `id_usuario_cadastro` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Acionadores `categorias`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_categoria` BEFORE INSERT ON `categorias` FOR EACH ROW BEGIN
+    DECLARE last_id INT;
+
+    SELECT COALESCE(MAX(id), 0) INTO last_id
+    FROM categorias
+    WHERE id_loja = NEW.id_loja;
+
+    SET NEW.id = last_id + 1;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -118,7 +134,7 @@ CREATE TABLE `loja` (
   `data_modificacao` timestamp NULL DEFAULT NULL,
   `id_usuario_cadastro` int DEFAULT NULL,
   `id_usuario_modificacao` int DEFAULT NULL,
-  `logotipo` blob,
+  `logotipo` longblob,
   `cep` varchar(10) DEFAULT NULL,
   `logradouro` varchar(255) DEFAULT NULL,
   `situacao` tinyint(1) DEFAULT NULL,
@@ -134,10 +150,10 @@ CREATE TABLE `loja` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `produto`
+-- Estrutura para tabela `produtos`
 --
 
-CREATE TABLE `produto` (
+CREATE TABLE `produtos` (
   `uuid` varchar(255) NOT NULL,
   `id` int DEFAULT NULL,
   `id_loja` int DEFAULT NULL,
@@ -150,6 +166,7 @@ CREATE TABLE `produto` (
   `preco_compra` double DEFAULT NULL,
   `markup_preco_venda` double DEFAULT NULL,
   `preco_venda` double DEFAULT NULL,
+  `qtd_estoque` decimal(10,3) NOT NULL DEFAULT '0.000',
   `data_cadastro` timestamp NULL DEFAULT NULL,
   `data_modificacao` timestamp NULL DEFAULT NULL,
   `id_fornecedor` varchar(255) DEFAULT NULL,
@@ -165,10 +182,10 @@ CREATE TABLE `produto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Acionadores `produto`
+-- Acionadores `produtos`
 --
 DELIMITER $$
-CREATE TRIGGER `before_insert_produto` BEFORE INSERT ON `produto` FOR EACH ROW BEGIN
+CREATE TRIGGER `before_insert_produto` BEFORE INSERT ON `produtos` FOR EACH ROW BEGIN
     DECLARE last_id INT;
 
     SELECT COALESCE(MAX(id), 0) INTO last_id
@@ -233,7 +250,7 @@ CREATE TABLE `usuarios` (
   `nome` varchar(50) DEFAULT NULL,
   `usuario` varchar(20) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
-  `senha` varchar(50) DEFAULT NULL,
+  `senha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `situacao` tinyint(1) DEFAULT NULL,
   `data_criacao` timestamp NULL DEFAULT NULL,
   `data_modificacao` timestamp NULL DEFAULT NULL,
@@ -279,9 +296,9 @@ ALTER TABLE `loja`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `produto`
+-- Índices de tabela `produtos`
 --
-ALTER TABLE `produto`
+ALTER TABLE `produtos`
   ADD PRIMARY KEY (`uuid`),
   ADD UNIQUE KEY `UC_PRODUTO_ID_LOJA` (`id`,`id_loja`),
   ADD KEY `FK_PRODUTO_ID_LOJA` (`id_loja`),
@@ -344,9 +361,9 @@ ALTER TABLE `clientes`
   ADD CONSTRAINT `FK_CLIENTE_TABELA` FOREIGN KEY (`id_tabela_preco`) REFERENCES `tabela_preco` (`uuid`) ON DELETE SET NULL;
 
 --
--- Restrições para tabelas `produto`
+-- Restrições para tabelas `produtos`
 --
-ALTER TABLE `produto`
+ALTER TABLE `produtos`
   ADD CONSTRAINT `FK_PRODUTO_CRIACAO` FOREIGN KEY (`id_usuario_cadastro`) REFERENCES `usuarios` (`uuid`),
   ADD CONSTRAINT `FK_PRODUTO_ID_CATEGORIA` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`uuid`),
   ADD CONSTRAINT `FK_PRODUTO_ID_FORNECEDOR` FOREIGN KEY (`id_fornecedor`) REFERENCES `clientes` (`uuid`),
